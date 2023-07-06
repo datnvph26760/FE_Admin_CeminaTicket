@@ -47,7 +47,7 @@ const Alerts = React.lazy(() => import('./views/notifications/alerts/Alerts'))
 const Badges = React.lazy(() => import('./views/notifications/badges/Badges'))
 const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
 const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
-const Ticket = React.lazy(() => import('./views/ve/Ticket'))
+const Ticket = React.lazy(() => import('./components/ve/Ticket'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
