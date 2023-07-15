@@ -3,49 +3,49 @@ import CIcon from '@coreui/icons-react'
 import { CButton, CCol, CContainer, CFormInput, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import { CSmartPagination } from '@coreui/react-pro'
 import React, { Component } from 'react'
-import TicketService from 'src/services/TicketService'
-class Ticket extends Component {
+import DoAnService from 'src/services/DoAnService'
+class DoAn extends Component {
     constructor(props) {
         super(props)
         this.state = {
             visible: false,
-            sortBy: "ngayDatVe",
+            sortBy: "ten",
             sortDir: "ASC",
-            ticket: {},
-            tickets: [],
+            doan: {},
+            doans: [],
             panigation: [],
             currentPage: 1,
         }
         this.setCurrentPage = this.setCurrentPage.bind(this);
     }
     componentDidMount() {
-        TicketService.getPageNo(1, this.state.sortDir, this.state.sortBy).then(res => {
-            this.setState({ tickets: res.data });
+        DoAnService.getPageNo(1, this.state.sortDir, this.state.sortBy).then(res => {
+            this.setState({ doans: res.data });
         })
-        TicketService.getPanigation().then(res => {
+        DoAnService.getPanigation().then(res => {
             this.setState({ panigation: res.data });
         })
     }
     setCurrentPage(pageno) {
         this.setState({ currentPage: pageno })
-        TicketService.getPageNo(pageno, this.state.sortDir, this.state.sortBy).then(res => {
-            this.setState({ tickets: res.data })
+        DoAnService.getPageNo(pageno, this.state.sortDir, this.state.sortBy).then(res => {
+            this.setState({ doans: res.data })
         })
     }
     getPageNo(pageno) {
         console.log(pageno);
     }
     viewdetail(id) {
-        TicketService.getTicketById(id).then(res => {
+        DoAnService.getDoAnById(id).then(res => {
             console.log(res.data)
-            this.setState({ ticket: res.data })
+            this.setState({ doan: res.data })
         })
         this.setState({ visible: true })
     }
     deletebyId(id) {
         const continues = confirm("Bạn có chắc chắn muốn xóa Vé Này ???");
         if (continues) {
-            TicketService.setDeleteState(id).then(res => {
+            DoAnService.setDeleteState(id).then(res => {
                 console.log(res.data)
             })
         }
@@ -66,7 +66,6 @@ class Ticket extends Component {
     render() {
         return (
             <CContainer fluid>
-
                 <CRow className="g-3 mb-5">
                     <CCol xs>
                         <CFormInput placeholder="First name" aria-label="First name" />
@@ -84,7 +83,7 @@ class Ticket extends Component {
                         <CModalTitle></CModalTitle>
                     </CModalHeader>
                     <CModalBody>
-                        {Object.keys(this.state.ticket).length > 0 ? (
+                        {Object.keys(this.state.doan).length > 0 ? (
                             <CTable>
                                 <CTableHead>
                                     <CTableRow>
@@ -98,7 +97,7 @@ class Ticket extends Component {
                                             Tên Phim:
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.ticket.lichChieu.thongTinPhim.ten}
+                                            {this.state.doan.lichChieu.thongTinPhim.ten}
                                         </CTableDataCell>
                                     </CTableRow>
                                     <CTableRow >
@@ -106,7 +105,7 @@ class Ticket extends Component {
                                             Ghế :
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.ticket.ghe.ten}
+                                            {this.state.doan.ghe.ten}
                                         </CTableDataCell>
                                     </CTableRow>
                                     <CTableRow >
@@ -114,7 +113,7 @@ class Ticket extends Component {
                                             Phòng Chiếu :
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.ticket.lichChieu.phongChieu.ten}
+                                            {this.state.doan.lichChieu.phongChieu.ten}
                                         </CTableDataCell>
                                     </CTableRow>
                                     <CTableRow >
@@ -122,7 +121,7 @@ class Ticket extends Component {
                                             Giá vé :
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.ticket.gia} VNĐ
+                                            {this.state.doan.gia} VNĐ
                                         </CTableDataCell>
                                     </CTableRow>
                                     <CTableRow >
@@ -130,7 +129,7 @@ class Ticket extends Component {
                                             Ngày chiếu :
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.ticket.lichChieu.ngayChieu}
+                                            {this.state.doan.lichChieu.ngayChieu}
                                         </CTableDataCell>
                                     </CTableRow>
                                     <CTableRow >
@@ -138,7 +137,7 @@ class Ticket extends Component {
                                             Giờ chiếu :
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.ticket.lichChieu.gioiChieu}
+                                            {this.state.doan.lichChieu.gioiChieu}
                                         </CTableDataCell>
                                     </CTableRow>
                                     <CTableRow >
@@ -146,7 +145,7 @@ class Ticket extends Component {
                                             Giờ kết thúc :
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.ticket.lichChieu.gioiKetThuc}
+                                            {this.state.doan.lichChieu.gioiKetThuc}
                                         </CTableDataCell>
                                     </CTableRow>
                                     <CTableRow >
@@ -154,7 +153,7 @@ class Ticket extends Component {
                                             Ngày đặt :
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.ticket.ngayDatVe}
+                                            {this.state.doan.ngayDatVe}
                                         </CTableDataCell>
                                     </CTableRow>
                                     <CTableRow >
@@ -162,13 +161,13 @@ class Ticket extends Component {
                                             Trạng thái :
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.ticket.trangThai}
+                                            {this.state.doan.trangThai}
                                         </CTableDataCell>
                                     </CTableRow>
                                 </CTableBody>
                             </CTable>
                         ) : (
-                            <p>No ticket details available.</p>
+                            <p>No doan details available.</p>
                         )}
                     </CModalBody>
                     <CModalFooter>
@@ -199,26 +198,26 @@ class Ticket extends Component {
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {this.state.tickets.map((ticket, index) => (
-                            <CTableRow key={ticket.id}>
+                        {this.state.doans.map((doan, index) => (
+                            <CTableRow key={doan.id}>
                                 <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
-                                <CTableDataCell>{ticket.ghe.ten}</CTableDataCell>
-                                <CTableDataCell>{ticket.ghe.loaiGhe.ten}</CTableDataCell>
-                                <CTableDataCell>{ticket.lichChieu.phongChieu.ten}</CTableDataCell>
-                                <CTableDataCell>{ticket.lichChieu.thongTinPhim.ten}</CTableDataCell>
-                                <CTableDataCell>{ticket.lichChieu.gioiChieu}</CTableDataCell>
-                                <CTableDataCell>{ticket.lichChieu.gioiKetThuc}</CTableDataCell>
-                                <CTableDataCell>{ticket.lichChieu.ngayChieu}</CTableDataCell>
-                                <CTableDataCell>{ticket.gia}</CTableDataCell>
-                                <CTableDataCell>{ticket.trangThai}</CTableDataCell>
-                                <CTableDataCell>{ticket.ngayDatVe}</CTableDataCell>
+                                <CTableDataCell>{doan.ghe.ten}</CTableDataCell>
+                                <CTableDataCell>{doan.ghe.loaiGhe.ten}</CTableDataCell>
+                                <CTableDataCell>{doan.lichChieu.phongChieu.ten}</CTableDataCell>
+                                <CTableDataCell>{doan.lichChieu.thongTinPhim.ten}</CTableDataCell>
+                                <CTableDataCell>{doan.lichChieu.gioiChieu}</CTableDataCell>
+                                <CTableDataCell>{doan.lichChieu.gioiKetThuc}</CTableDataCell>
+                                <CTableDataCell>{doan.lichChieu.ngayChieu}</CTableDataCell>
+                                <CTableDataCell>{doan.gia}</CTableDataCell>
+                                <CTableDataCell>{doan.trangThai}</CTableDataCell>
+                                <CTableDataCell>{doan.ngayDatVe}</CTableDataCell>
                                 <CTableDataCell>
                                     {/* <Link to={}> View </Link>
                                     <Link to={}> Edit </Link>
                                     <Link to={}> Delete </Link> */}
-                                    <CButton color="secondary" onClick={() => this.viewdetail(ticket.id)}>View</CButton>
-                                    <CButton color="danger" onClick={() => this.deletebyId(ticket.id)}>Delete</CButton>
-                                    <CButton color="success" onClick={() => this.deletebyId(ticket.id)}>Update</CButton>
+                                    <CButton color="secondary" onClick={() => this.viewdetail(doan.id)}>View</CButton>
+                                    <CButton color="danger" onClick={() => this.deletebyId(doan.id)}>Delete</CButton>
+                                    <CButton color="success" onClick={() => this.deletebyId(doan.id)}>Update</CButton>
                                 </CTableDataCell>
                             </CTableRow>
                         ))}
@@ -234,7 +233,7 @@ class Ticket extends Component {
         )
     }
 }
-export default Ticket;
+export default DoAn;
 
 // {
 //     "id": {
