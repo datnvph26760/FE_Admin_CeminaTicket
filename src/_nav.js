@@ -47,17 +47,17 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Ghế',
-        to: '/forms/form-control',
+        to: 'ghe',
       },
       {
         component: CNavItem,
         name: 'Phòng Chiếu',
-        to: '/forms/select',
+        to: 'phong-chieu',
       },
       {
         component: CNavItem,
         name: 'Loại Ghế',
-        to: '/forms/checks-radios',
+        to: 'loai-ghe',
       },
     ],
   },

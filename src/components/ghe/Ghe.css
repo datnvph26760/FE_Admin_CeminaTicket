@@ -1,0 +1,65 @@
+.container {
+  padding: 20px;
+}
+
+.mb-3 {
+  margin-bottom: 20px;
+}
+
+.ghe-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ghe {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  margin: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ghe-trang-thai-1 {
+  background-color: #ccc;
+}
+
+.ghe-trang-thai-2 {
+  background-color: #00ff00;
+}
+
+.ghe-vip {
+  background-color: #ffa500;
+}
+
+.ghe-name {
+  font-weight: bold;
+}
+
+.ghe-status {
+  margin-top: 5px;
+}
+
+.ghe-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+
+.ghe-actions button {
+  margin-left: 5px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.pagination button {
+  margin-right: 5px;
+}

@@ -48,7 +48,9 @@ const Badges = React.lazy(() => import('./views/notifications/badges/Badges'))
 const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
 const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 const Ticket = React.lazy(() => import('./components/ve/Ticket'))
-
+const PhongChieu = React.lazy(() => import('./components/phongChieu/IndexPhongChieu'))
+const LoaiGhe = React.lazy(() => import('./components/loaiGhe/indexLoaiGhe'))
+const Ghe = React.lazy(() => import('./components/ghe/indexGhe'))
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 const routes = [
@@ -57,6 +59,9 @@ const routes = [
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/ve', name: 'Ve', element: Ticket },
+  { path: '/phong-chieu', name: 'PhongChieu', element: PhongChieu },
+  { path: '/ghe', name: 'Ghe', element: Ghe },
+  { path: '/loai-ghe', name: 'LoaiGhe', element: LoaiGhe },
   { path: '/theme/typography', name: 'Typography', element: Typography },
   { path: '/base', name: 'Base', element: Cards, exact: true },
   { path: '/base/accordion', name: 'Accordion', element: Accordion },
