@@ -140,7 +140,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Khách Hàng',
-        to: '/login',
+        to: '/khach-hang',
       },
     ],
   },
@@ -152,12 +152,12 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Nhân Viên',
-        to: '/login',
+        to: '/nhan-vien',
       },
       {
         component: CNavItem,
         name: 'Chức Vụ',
-        to: '/login',
+        to: '/chuc-vu',
       },
     ],
   },
