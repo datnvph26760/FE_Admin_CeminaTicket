@@ -1,28 +1,27 @@
 import axios from 'axios';
 
-const EMPLOYEE_API_BASE_URL = "http://localhost:8080/v1/api/persons";
+const HOADON_API_BASE_URL = "http://localhost:8080/cimena/hoa-don";
 
 class HoaDonService {
+  async getHoaDons() {
+    return await axios.get(HOADON_API_BASE_URL);
+  }
 
-    getPersons(){
-        return axios.get(EMPLOYEE_API_BASE_URL);
-    }
+  async createHoaDon(hoaDon) {
+    return await axios.post(HOADON_API_BASE_URL, hoaDon);
+  }
 
-    createPerson(person){
-        return axios.post(EMPLOYEE_API_BASE_URL, person);
-    }
+  async getHoaDonById(hoaDonId) {
+    return await axios.get(HOADON_API_BASE_URL + '/' + hoaDonId);
+  }
 
-    getPersonById(personId){
-        return axios.get(EMPLOYEE_API_BASE_URL + '/' + personId);
-    }
+  async updateHoaDon(hoaDon, hoaDonId) {
+    return await axios.put(HOADON_API_BASE_URL + '/' + hoaDonId, hoaDon);
+  }
 
-    updatePerson(person, personId){
-        return axios.put(EMPLOYEE_API_BASE_URL + '/' + personId, person);
-    }
-
-    deletePerson(personId){
-        return axios.delete(EMPLOYEE_API_BASE_URL + '/' + personId);
-    }
+  async deleteHoaDon(hoaDonId) {
+    return await axios.delete(HOADON_API_BASE_URL + '/' + hoaDonId);
+  }
 }
 
 export default new HoaDonService();

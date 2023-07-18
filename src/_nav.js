@@ -69,7 +69,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Hóa Đơn',
-        to: '/icons/coreui-icons',
+        to: '/hoadon',
       },
       {
         component: CNavItem,
@@ -118,7 +118,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Đồ ăn',
-        to: '/notifications/alerts',
+        to: '/doan',
       },
       {
         component: CNavItem,

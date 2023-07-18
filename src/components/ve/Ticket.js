@@ -3,6 +3,7 @@ import CIcon from '@coreui/icons-react'
 import { CButton, CCol, CContainer, CFormInput, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import { CSmartPagination } from '@coreui/react-pro'
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import TicketService from 'src/services/TicketService'
 class Ticket extends Component {
     constructor(props) {
@@ -218,7 +219,7 @@ class Ticket extends Component {
                                     <Link to={}> Delete </Link> */}
                                     <CButton color="secondary" onClick={() => this.viewdetail(ticket.id)}>View</CButton>
                                     <CButton color="danger" onClick={() => this.deletebyId(ticket.id)}>Delete</CButton>
-                                    <CButton color="success" onClick={() => this.deletebyId(ticket.id)}>Update</CButton>
+                                    <Link to={"/formve/" + ticket.id.id_ghe+"/"+ticket.id.id_lich_chieu} className='btn btn-success' >Update</Link>
                                 </CTableDataCell>
                             </CTableRow>
                         ))}
@@ -230,6 +231,7 @@ class Ticket extends Component {
                     pages={this.state.panigation.length}
                     onActivePageChange={this.setCurrentPage}
                 />
+                <Link to={"/formve/add/add"} className='btn btn-success' >Add</Link>
             </CContainer>
         )
     }

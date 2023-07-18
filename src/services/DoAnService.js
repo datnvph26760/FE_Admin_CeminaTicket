@@ -1,27 +1,36 @@
 import axios from 'axios';
 
-const EMPLOYEE_API_BASE_URL = "http://localhost:8080/v1/api/persons";
+const DOAN_API_BASE_URL = "http://localhost:8080/cimena/do-an";
 
 class DoAnService {
 
     getDoAns(){
-        return axios.get(EMPLOYEE_API_BASE_URL);
+        return axios.get(DOAN_API_BASE_URL);
     }
 
-    createDoAn(person){
-        return axios.post(EMPLOYEE_API_BASE_URL, person);
+    createDoAn(doan){
+        return axios.post(DOAN_API_BASE_URL, doan);
     }
 
-    getDoAnById(personId){
-        return axios.get(EMPLOYEE_API_BASE_URL + '/' + personId);
+    getDoAnById(id){
+        return axios.get(DOAN_API_BASE_URL + '/' + id);
     }
 
-    updateDoAn(person, personId){
-        return axios.put(EMPLOYEE_API_BASE_URL + '/' + personId, person);
+    updateDoAn(doan, id){
+        return axios.put(DOAN_API_BASE_URL + '/' + id, doan);
     }
 
-    deleteDoAn(personId){
-        return axios.delete(EMPLOYEE_API_BASE_URL + '/' + personId);
+    deleteDoAn(Id){
+        return axios.delete(DOAN_API_BASE_URL + '/' + Id);
+    }
+    searchDoAn(txt){
+        return axios.get(`${DOAN_API_BASE_URL}/search?name=${txt}`)
+    }
+    getPanigation(){
+        return axios.get(DOAN_API_BASE_URL + '/panigation');
+    }
+    getPageNo(pageno, sortdir, sortby) {
+        return axios.get(`${DOAN_API_BASE_URL}/page?sortby=${sortby}&sortdir=${sortdir}&pageno=${pageno}`);
     }
 }
 

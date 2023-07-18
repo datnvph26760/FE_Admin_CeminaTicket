@@ -47,7 +47,14 @@ const Alerts = React.lazy(() => import('./views/notifications/alerts/Alerts'))
 const Badges = React.lazy(() => import('./views/notifications/badges/Badges'))
 const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
 const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
+// ve
 const Ticket = React.lazy(() => import('./components/ve/Ticket'))
+const FormTicket = React.lazy(() => import('./components/ve/FormTicket'))
+// do an
+const DoAn = React.lazy(() => import('./components/doan/DoAn'))
+const FormDoAn = React.lazy(() => import('./components/doan/FormDoAn'))
+// hoadon 
+const HoaDon = React.lazy(() => import('./components/hoadon/HoaDon'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
@@ -57,6 +64,11 @@ const routes = [
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/ve', name: 'Ve', element: Ticket },
+  { path: '/formve/:id_ghe/:id_lichChieu', name: 'Form Ve', element: FormTicket },
+  { path: '/hoadon', name: 'Hoa Don', element: HoaDon },
+  { path: '/doan', name: 'DoAn', element: DoAn },
+  { path: '/doan', name: 'DoAn', element: DoAn },
+  { path: '/formdoan/:id', name: 'Form Do An', element: FormDoAn },
   { path: '/theme/typography', name: 'Typography', element: Typography },
   { path: '/base', name: 'Base', element: Cards, exact: true },
   { path: '/base/accordion', name: 'Accordion', element: Accordion },

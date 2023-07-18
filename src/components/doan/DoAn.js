@@ -1,4 +1,5 @@
-import { cilCloudDownload, cilSwapVertical } from '@coreui/icons'
+import { cilSwapVertical } from '@coreui/icons'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import CIcon from '@coreui/icons-react'
 import { CButton, CCol, CContainer, CFormInput, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import { CSmartPagination } from '@coreui/react-pro'
@@ -15,6 +16,7 @@ class DoAn extends Component {
             doans: [],
             panigation: [],
             currentPage: 1,
+            searchtxt: ""
         }
         this.setCurrentPage = this.setCurrentPage.bind(this);
     }
@@ -31,9 +33,6 @@ class DoAn extends Component {
         DoAnService.getPageNo(pageno, this.state.sortDir, this.state.sortBy).then(res => {
             this.setState({ doans: res.data })
         })
-    }
-    getPageNo(pageno) {
-        console.log(pageno);
     }
     viewdetail(id) {
         DoAnService.getDoAnById(id).then(res => {
@@ -63,24 +62,36 @@ class DoAn extends Component {
         }
         this.setCurrentPage(1, this.state.sortDir, this.state.sortBy);
     }
+    setTxtSearch(txt) {
+        this.setState({
+            searchtxt: txt
+        })
+    }
+    search() {
+        DoAnService.searchDoAn(this.state.searchtxt).then(res => {
+            if (res.data.length ==0) {
+                alert("Không tìm thấy đồ ăn với tên là :" + this.state.searchtxt);
+            } else {
+                this.setState({
+                    doans: res.data
+                })
+            }
+        })
+    }
     render() {
         return (
-            <CContainer fluid>
+            <CContainer md>
                 <CRow className="g-3 mb-5">
-                    <CCol xs>
-                        <CFormInput placeholder="First name" aria-label="First name" />
-                    </CCol>
-                    <CCol xs>
-                        <CFormInput placeholder="Last name" aria-label="Last name" />
-                    </CCol>
-                    <CCol xs>
-                        <CFormInput placeholder="Last name" aria-label="Last name" />
+                    <CCol>
+                        <CFormInput placeholder="search food" aria-label="Seach"
+                            value={this.state.txt}
+                            onChange={(event) => { this.setTxtSearch(event.target.value) }} />
+                        <CButton onClick={() => { this.search() }}>Search</CButton>
                     </CCol>
                 </CRow >
-
                 <CModal scrollable visible={this.state.visible} onClose={() => this.setState({ visible: false })}>
                     <CModalHeader>
-                        <CModalTitle></CModalTitle>
+                        <CModalTitle>Foot Detail</CModalTitle>
                     </CModalHeader>
                     <CModalBody>
                         {Object.keys(this.state.doan).length > 0 ? (
@@ -94,74 +105,18 @@ class DoAn extends Component {
                                 <CTableBody>
                                     <CTableRow >
                                         <CTableDataCell>
-                                            Tên Phim:
+                                            Tên đồ ăn:
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.doan.lichChieu.thongTinPhim.ten}
-                                        </CTableDataCell>
-                                    </CTableRow>
-                                    <CTableRow >
-                                        <CTableDataCell>
-                                            Ghế :
-                                        </CTableDataCell>
-                                        <CTableDataCell>
-                                            {this.state.doan.ghe.ten}
+                                            {this.state.doan.ten}
                                         </CTableDataCell>
                                     </CTableRow>
                                     <CTableRow >
                                         <CTableDataCell>
-                                            Phòng Chiếu :
+                                            Giá Đồ Ăn:
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {this.state.doan.lichChieu.phongChieu.ten}
-                                        </CTableDataCell>
-                                    </CTableRow>
-                                    <CTableRow >
-                                        <CTableDataCell>
-                                            Giá vé :
-                                        </CTableDataCell>
-                                        <CTableDataCell>
-                                            {this.state.doan.gia} VNĐ
-                                        </CTableDataCell>
-                                    </CTableRow>
-                                    <CTableRow >
-                                        <CTableDataCell>
-                                            Ngày chiếu :
-                                        </CTableDataCell>
-                                        <CTableDataCell>
-                                            {this.state.doan.lichChieu.ngayChieu}
-                                        </CTableDataCell>
-                                    </CTableRow>
-                                    <CTableRow >
-                                        <CTableDataCell>
-                                            Giờ chiếu :
-                                        </CTableDataCell>
-                                        <CTableDataCell>
-                                            {this.state.doan.lichChieu.gioiChieu}
-                                        </CTableDataCell>
-                                    </CTableRow>
-                                    <CTableRow >
-                                        <CTableDataCell>
-                                            Giờ kết thúc :
-                                        </CTableDataCell>
-                                        <CTableDataCell>
-                                            {this.state.doan.lichChieu.gioiKetThuc}
-                                        </CTableDataCell>
-                                    </CTableRow>
-                                    <CTableRow >
-                                        <CTableDataCell>
-                                            Ngày đặt :
-                                        </CTableDataCell>
-                                        <CTableDataCell>
-                                            {this.state.doan.ngayDatVe}
-                                        </CTableDataCell>
-                                    </CTableRow>
-                                    <CTableRow >
-                                        <CTableDataCell>
-                                            Trạng thái :
-                                        </CTableDataCell>
-                                        <CTableDataCell>
-                                            {this.state.doan.trangThai}
+                                            {this.state.doan.gia}
                                         </CTableDataCell>
                                     </CTableRow>
                                 </CTableBody>
@@ -180,20 +135,12 @@ class DoAn extends Component {
                     <CTableHead>
                         <CTableRow>
                             <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Ghế
-                                <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("ghe.ten")} />
+                            <CTableHeaderCell scope="col">Tên đồ ăn
+                                <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("ten")} />
                             </CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Loại Ghế
-                                <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("ghe.loaiGhe.ten")} />
+                            <CTableHeaderCell scope="col">Giá
+                                <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("gia")} />
                             </CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Phòng Chiếu <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("lichChieu.phongChieu.ten")} /></CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Tên Phim <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("lichChieu.phongChieu.ten")} /></CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Giờ bắt đầu <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("lichChieu.gioiChieu")} /></CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Giờ kết thúc <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("lichChieu.gioiKetThuc")} /></CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Ngày Chiếu <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("lichChieu.ngayChieu")} /></CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Giá vé <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("gia")} /></CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Trạng thái <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("trangThai")} /></CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Ngày đặt <CIcon icon={cilSwapVertical} size="md" onClick={() => this.setSortByAndDir("ngayDatVe")} /></CTableHeaderCell>
                             <CTableHeaderCell scope="col">Funtion</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
@@ -201,23 +148,13 @@ class DoAn extends Component {
                         {this.state.doans.map((doan, index) => (
                             <CTableRow key={doan.id}>
                                 <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
-                                <CTableDataCell>{doan.ghe.ten}</CTableDataCell>
-                                <CTableDataCell>{doan.ghe.loaiGhe.ten}</CTableDataCell>
-                                <CTableDataCell>{doan.lichChieu.phongChieu.ten}</CTableDataCell>
-                                <CTableDataCell>{doan.lichChieu.thongTinPhim.ten}</CTableDataCell>
-                                <CTableDataCell>{doan.lichChieu.gioiChieu}</CTableDataCell>
-                                <CTableDataCell>{doan.lichChieu.gioiKetThuc}</CTableDataCell>
-                                <CTableDataCell>{doan.lichChieu.ngayChieu}</CTableDataCell>
+                                <CTableDataCell>{doan.ten}</CTableDataCell>
                                 <CTableDataCell>{doan.gia}</CTableDataCell>
-                                <CTableDataCell>{doan.trangThai}</CTableDataCell>
-                                <CTableDataCell>{doan.ngayDatVe}</CTableDataCell>
                                 <CTableDataCell>
-                                    {/* <Link to={}> View </Link>
-                                    <Link to={}> Edit </Link>
-                                    <Link to={}> Delete </Link> */}
                                     <CButton color="secondary" onClick={() => this.viewdetail(doan.id)}>View</CButton>
                                     <CButton color="danger" onClick={() => this.deletebyId(doan.id)}>Delete</CButton>
-                                    <CButton color="success" onClick={() => this.deletebyId(doan.id)}>Update</CButton>
+                                    {/* <CButton color="success" onClick={() => this.deletebyId(doan.id)}>Update</CButton> */}
+                                    <Link to={"/formdoan/" + doan.id} className='btn btn-success' >Update</Link>
                                 </CTableDataCell>
                             </CTableRow>
                         ))}
@@ -229,6 +166,7 @@ class DoAn extends Component {
                     pages={this.state.panigation.length}
                     onActivePageChange={this.setCurrentPage}
                 />
+                <Link to={"/formdoan/null"} className='btn btn-success' >New</Link>
             </CContainer>
         )
     }
@@ -236,101 +174,12 @@ class DoAn extends Component {
 export default DoAn;
 
 // {
-//     "id": {
-//         "id_lich_chieu": "92726cd6-3212-4dca-98c6-1c08ac63e39a",
-//         "id_ghe": "443a5f94-7766-4171-aa6d-035fc287d9ca"
-//     },
-//     "lichChieu": {
-//         "id": "92726cd6-3212-4dca-98c6-1c08ac63e39a",
-//         "phongChieu": {
-//             "id": "c05b59a7-2126-4905-8df7-58c8e38264b6",
-//             "ten": "Room D",
-//             "soLuongGhe": 90,
-//             "trangThai": 1,
-//             "updateAt": null,
-//             "createAt": "2023-07-13T13:05:08.303",
-//             "createBy": null,
-//             "updateBy": null,
-//             "deleted": false
-//         },
-//         "thongTinPhim": {
-//             "id": "4d7d0ac7-9be0-4917-9c5e-6a02aa89b73f",
-//             "ten": "Movie 4",
-//             "daoDien": "Director 4",
-//             "nhaSanXuat": "Producer 4",
-//             "dienVien": "Actor 4, Actress 4",
-//             "namPhatHanh": 2020,
-//             "thoiLuong": 110,
-//             "tuoiGioiHan": 14,
-//             "noiDung": "This is the plot of Movie 4.",
-//             "trailer": null,
-//             "poster": null,
-//             "quocGia": null,
-//             "ngonNgu": null,
-//             "createAt": "2023-07-13T12:56:42.283",
-//             "updateAt": null,
-//             "deleted": false
-//         },
-//         "gioiChieu": "1900-01-01T19:00:00",
-//         "gioiKetThuc": "1900-01-01T21:00:00",
-//         "ngayChieu": "1900-01-01T13:09:14.2333333",
-//         "trangThai": 1,
-//         "createAt": "2023-07-13T13:09:14.233",
-//         "updateAt": null,
-//         "updateBy": null,
-//         "createBy": null,
-//         "deleted": false
-//     },
-//     "ghe": {
-//         "id": "443a5f94-7766-4171-aa6d-035fc287d9ca",
-//         "ten": "Seat 2",
-//         "loaiGhe": {
-//             "id": "b3175ce1-6af1-4e54-aa51-36df58c8939b",
-//             "ten": "Executive",
-//             "trangThai": 1,
-//             "updateAt": null,
-//             "createAt": "2023-07-13T13:41:05.42",
-//             "createBy": null,
-//             "updateBy": null,
-//             "deleted": false
-//         },
-//         "phongChieu": {
-//             "id": "bf359cf1-ffec-48d8-ba1f-3922fa1c0298",
-//             "ten": "Room E",
-//             "soLuongGhe": 150,
-//             "trangThai": 1,
-//             "updateAt": null,
-//             "createAt": "2023-07-13T13:05:08.303",
-//             "createBy": null,
-//             "updateBy": null,
-//             "deleted": false
-//         },
-//         "trangThai": 1,
-//         "updateAt": null,
-//         "createAt": "2023-07-13T13:43:17.613",
-//         "deleted": false
-//     },
-//     "gia": 100000,
-//     "trangThai": 1,
-//     "ngayDatVe": "2023-07-13",
-//     "createAt": "2023-07-13T13:55:09.567",
+//     "id": "3be55afc-ee00-46c8-aefd-1a2932e88d82",
+//     "ten": "DoAn 6",
+//     "gia": 8.99,
+//     "createAt": "2023-07-07T15:33:15.633",
 //     "updateAt": null,
 //     "updateBy": null,
 //     "createBy": null,
-//     "deleted": false,
-//     "hoaDon": {
-//         "id": "58b08909-4292-450e-a47d-02efedb03b2d",
-//         "ghiChu": "Ghi chú 14",
-//         "tongGia": 130,
-//         "tongGiaSauGiam": "117.0000",
-//         "thoiGianThanhToan": "2023-07-06T22:17:30.297",
-//         "trang_Thai": 1,
-//         "createAt": null,
-//         "updateAt": null,
-//         "updateBy": null,
-//         "createBy": null,
-//         "deleted": false,
-//         "nhanVien": null,
-//         "khachHang": null
-//     }
-// }
+//     "deleted": false
+// },
