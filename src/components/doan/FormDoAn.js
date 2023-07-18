@@ -52,6 +52,8 @@ class FormDoAn extends Component {
         this.setState({ gia: value, giaErrors: errors });
     }
     submitForm() {
+        this.validateGia(this.state.gia)
+        this.validateTen(this.state.ten)
         if (this.state.tenErrors.length == 0 && this.state.giaErrors.length == 0) {
             if (this.state.function == "Add") {
                 if (confirm("Bạn muốn thêm đồ ăn này?")) {

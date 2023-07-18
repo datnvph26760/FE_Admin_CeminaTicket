@@ -11,10 +11,11 @@ class FormTicket extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            id_ghe: this.props.params.id_ghe,
-            id_lichChieu: this.props.params.id_lichChieu,
-            id_hoadon: "",
+            id_gheud: this.props.params.id_ghe,
+            id_lichChieuud: this.props.params.id_lichChieu,
             id_ghe: "",
+            id_hoadon: "",
+            id_lichChieu: "",
             hoadondetail: {},
             ghes: [],
             lichChieus: [],
@@ -30,18 +31,14 @@ class FormTicket extends Component {
         }
     }
     async componentDidMount() {
-        if (this.state.id_ghe == "add") {
+        if (this.state.id_gheud == "add") {
             this.setState({ function: "add" })
         } else {
-            console.log(this.state.id_ghe);
-            console.log(this.state.id_lichChieu);
             this.setState({ function: "update" })
         }
-
         try {
             const hoaDonResponse = await HoaDonService.getHoaDons();
             this.setState({ hoaDon: hoaDonResponse.data });
-
             const lichChieuResponse = await LichChieuService.getLichChieus();
             this.setState({ lichChieus: lichChieuResponse.data });
         } catch (error) {
@@ -52,26 +49,25 @@ class FormTicket extends Component {
     async selectLichChieu(value) {
         const idphong = value;
         const errors = [];
-        if (value.trim() == "Choose...") {
+        if (value.trim() == "Choose..." || value.trim() == "") {
             errors.push("Vui lòng chọn Lich chieu");
         } else {
             try {
                 const lichChieuResponse = await LichChieuService.getLichChieuById(idphong);
-                this.setState({ lichChieu: lichChieuResponse.data });
-
+                this.setState({ lichChieu: lichChieuResponse.data, id_lichChieu: lichChieuResponse.data.id });
                 const gheResponse = await GheService.getGhes(lichChieuResponse.data.phongChieu.id);
                 this.setState({ ghes: gheResponse.data, ghe: {} });
             } catch (error) {
                 console.log(error);
-                // Handle error if necessary
             }
         }
+        this.setState({ lichChieuError: errors })
     }
 
     async selectHoaDon(value) {
         const idHoaDon = value;
         const errors = [];
-        if (value.trim() == "Choose...") {
+        if (value.trim() == "Choose..." || idHoaDon.trim() == "") {
             errors.push("Vui lòng chọn hóa đơn");
         } else {
             try {
@@ -82,13 +78,14 @@ class FormTicket extends Component {
                 // Handle error if necessary
             }
         }
+        this.setState({ hoaDonError: errors })
     }
 
     async selectGhe(value) {
         const idghe = value;
         let ghedt = {};
         const errors = [];
-        if (idghe.trim() == "Choose...") {
+        if (idghe.trim() == "Choose..." || idghe.trim() == "") {
             errors.push("Vui lòng Chọn Ghế");
         } else {
             try {
@@ -96,54 +93,49 @@ class FormTicket extends Component {
                 ghedt = gheResponse.data;
 
                 const giaVeLichChieuResponse = await GiaVeLichChieuService.getGiaVeLichChieuByLichChieuLoaiGhe(this.state.lichChieu.id, gheResponse.data.loaiGhe.id);
-                this.setState({ gia: giaVeLichChieuResponse.data.gia, ghe: ghedt });
+                this.setState({ gia: giaVeLichChieuResponse.data.gia, ghe: ghedt, id_ghe: idghe  });
             } catch (error) {
                 confirm("Do giá ghế chưa được set nên mặc định là 50k ");
                 // Handle error from GiaVeLichChieuService call
-                this.setState({ gia: 50000, ghe: ghedt, id_ghe: idghe });
+                this.setState({ gia: 50000, ghe: ghedt, id_ghe: idghe  });
             }
         }
-        this.setState({ gheError: errors });
+        this.setState({ gheError: errors});
     }
 
     saveVe() {
+        // this.selectGhe(this.state.id_ghe);
+        // this.selectHoaDon(this.state.id_hoadon);
+        // this.selectLichChieu(this.state.id_lichChieu);
         this.selectGhe(this.state.id_ghe);
         this.selectHoaDon(this.state.id_hoadon);
         this.selectLichChieu(this.state.id_lichChieu);
         if (
-            typeof this.state.id_ghe !== "undefined" &&
-            typeof this.state.id_lichChieu !== "undefined" &&
-            Object.keys(this.state.hoaDon).length !== 0
+            this.state.lichChieuError.length === 0 &&
+            this.state.gheError.length === 0 &&
+            this.state.hoaDonError.length === 0
         ) {
-            if (
-                this.state.lichChieuError.length === 0 &&
-                this.state.gheError.length === 0 &&
-                this.state.hoaDonError.length === 0
-            ) {
-                if (confirm("Bạn muốn thêm hoặc sửa vé này?")) {
-                    if (this.state.function === "add") {
-                        const addve = {
-                            id_lich_chieu: this.state.lichChieu.id,
-                            id_ghe: this.state.ghe.id,
-                            gia: this.state.gia,
-                            trangThai: this.state.trangThai,
-                            hoaDon: this.state.hoadondetail,
-                        };
-                        console.log(addve);
-                    } else if (this.state.function === "update") {
-                        const updateve = {
-                            id_lich_chieu: this.state.lichChieu.id,
-                            id_ghe: this.state.ghe.id,
-                            gia: this.state.gia,
-                            trangThai: this.state.trangThai,
-                            hoaDon: this.state.hoadondetail,
-                        };
-                        console.log(updateve);
-                    }
+            if (confirm("Bạn muốn thêm hoặc sửa vé này?")) {
+                if (this.state.function === "add") {
+                    const addve = {
+                        id_lich_chieu: this.state.lichChieu.id,
+                        id_ghe: this.state.ghe.id,
+                        gia: this.state.gia,
+                        trangThai: this.state.trangThai,
+                        hoaDon: this.state.hoadondetail,
+                    };
+                    console.log(addve);
+                } else if (this.state.function === "update") {
+                    const updateve = {
+                        id_lich_chieu: this.state.lichChieu.id,
+                        id_ghe: this.state.ghe.id,
+                        gia: this.state.gia,
+                        trangThai: this.state.trangThai,
+                        hoaDon: this.state.hoadondetail,
+                    };
+                    console.log(updateve);
                 }
             }
-        } else {
-            confirm("Kiểm tra lại đầu vào");
         }
     }
 
@@ -174,7 +166,7 @@ class FormTicket extends Component {
                         <CFormSelect id="inputState" label="Lịch Chiếu" onChange={(event) => { this.selectLichChieu(event.target.value) }}>
                             <option>Choose...</option>
                             {this.state.lichChieus.map(lichChieu => (
-                                <option value={lichChieu.id}>
+                                <option value={lichChieu.id} selected={this.state.id_lichChieuud === lichChieu.id}>
                                     {lichChieu.thongTinPhim.ten + " - " + lichChieu.gioiChieu + " - " + lichChieu.phongChieu.ten}
                                 </option>
                             ))}
@@ -193,7 +185,7 @@ class FormTicket extends Component {
                         <CFormSelect id="inputState" label="Ghế" onChange={(event) => { this.selectGhe(event.target.value) }}>
                             <option>Choose...</option>
                             {this.state.ghes.map(ghe => (
-                                <option value={ghe.id}>
+                                <option value={ghe.id} selected={this.state.id_gheud === ghe.id}>
                                     {ghe.ten + " - " + ghe.loaiGhe.ten}
                                 </option>
                             ))}
