@@ -14,6 +14,7 @@ class FormTicket extends Component {
             id_ghe: this.props.params.id_ghe,
             id_lichChieu: this.props.params.id_lichChieu,
             id_hoadon: "",
+            id_ghe: "",
             hoadondetail: {},
             ghes: [],
             lichChieus: [],
@@ -48,10 +49,10 @@ class FormTicket extends Component {
             // Handle error if necessary
         }
     }
-    async selectLichChieu(event) {
-        const idphong = event.target.value;
+    async selectLichChieu(value) {
+        const idphong = value;
         const errors = [];
-        if (event.target.value.trim() == "Choose...") {
+        if (value.trim() == "Choose...") {
             errors.push("Vui lòng chọn Lich chieu");
         } else {
             try {
@@ -67,11 +68,10 @@ class FormTicket extends Component {
         }
     }
 
-    async selectHoaDon(event) {
-        console.log(event.target.value);
-        const idHoaDon = event.target.value;
+    async selectHoaDon(value) {
+        const idHoaDon = value;
         const errors = [];
-        if (event.target.value.trim() == "Choose...") {
+        if (value.trim() == "Choose...") {
             errors.push("Vui lòng chọn hóa đơn");
         } else {
             try {
@@ -84,8 +84,8 @@ class FormTicket extends Component {
         }
     }
 
-    async selectGhe(event) {
-        const idghe = event.target.value;
+    async selectGhe(value) {
+        const idghe = value;
         let ghedt = {};
         const errors = [];
         if (idghe.trim() == "Choose...") {
@@ -100,13 +100,16 @@ class FormTicket extends Component {
             } catch (error) {
                 confirm("Do giá ghế chưa được set nên mặc định là 50k ");
                 // Handle error from GiaVeLichChieuService call
-                this.setState({ gia: 50000, ghe: ghedt });
+                this.setState({ gia: 50000, ghe: ghedt, id_ghe: idghe });
             }
         }
         this.setState({ gheError: errors });
     }
 
     saveVe() {
+        this.selectGhe(this.state.id_ghe);
+        this.selectHoaDon(this.state.id_hoadon);
+        this.selectLichChieu(this.state.id_lichChieu);
         if (
             typeof this.state.id_ghe !== "undefined" &&
             typeof this.state.id_lichChieu !== "undefined" &&
@@ -149,7 +152,7 @@ class FormTicket extends Component {
             <>
                 <CForm className="row g-3">
                     <CCol xs={12}>
-                        <CFormSelect id="inputState" label="Hóa Đơn" onChange={(event) => { this.selectHoaDon(event) }}>
+                        <CFormSelect id="inputState" label="Hóa Đơn" onChange={(event) => { this.selectHoaDon(event.target.value) }}>
                             <option>Choose...</option>
                             {this.state.hoaDon.map(hoadon => (
                                 <option value={hoadon.id}>
@@ -168,7 +171,7 @@ class FormTicket extends Component {
                         )}
                     </CCol>
                     <CCol xs={12}>
-                        <CFormSelect id="inputState" label="Lịch Chiếu" onChange={(event) => { this.selectLichChieu(event) }}>
+                        <CFormSelect id="inputState" label="Lịch Chiếu" onChange={(event) => { this.selectLichChieu(event.target.value) }}>
                             <option>Choose...</option>
                             {this.state.lichChieus.map(lichChieu => (
                                 <option value={lichChieu.id}>
@@ -187,7 +190,7 @@ class FormTicket extends Component {
                         )}
                     </CCol>
                     <CCol xs={6}>
-                        <CFormSelect id="inputState" label="Ghế" onChange={(event) => { this.selectGhe(event) }}>
+                        <CFormSelect id="inputState" label="Ghế" onChange={(event) => { this.selectGhe(event.target.value) }}>
                             <option>Choose...</option>
                             {this.state.ghes.map(ghe => (
                                 <option value={ghe.id}>
